@@ -36,7 +36,7 @@ This project contains following folders and files.
 Assume that we use ```~/Repos``` as the working directory. Git clone this repo:
 ```
 $ cd ~/Repos
-$ git clone https://github.com/dapowan/LIMU-BERT-Public
+$ git clone https://github.com/lovemikuuc/CoresetExp.git
 ```
 
 ## Setup
