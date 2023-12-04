@@ -8,6 +8,8 @@
 import copy
 import os
 import time
+import wandb
+import timeit
 
 import numpy as np
 import torch
@@ -103,6 +105,26 @@ class Trainer(object):
     def train(self, func_loss, func_forward, func_evaluate, data_loader_train, data_loader_test, data_loader_vali
               , model_file=None, data_parallel=False, load_self=False):
         """ Train Loop """
+        run = wandb.init(
+            project = 'Nov Coreset 5P retest',
+            name = 'hhar random 09 classifier v1',
+            config = {
+                "epochs": self.cfg.n_epochs,
+                "learning_rate": self.cfg.lr,
+                "batch_size": self.cfg.batch_size
+            }
+        )
+        wandb.define_metric("Average Loss", summary = "none")
+        wandb.define_metric("Train Accuracy", summary = "best")
+        wandb.define_metric("Validation Accuracy", summary = "best")
+        wandb.define_metric("Test Accuracy", summary = "best")
+        wandb.define_metric("Train F1", summary = "best")
+        wandb.define_metric("Validation F1", summary = "best")
+        wandb.define_metric("Test F1", summary = "best")
+
+
+
+        t_0 = timeit.default_timer()
         self.load(model_file, load_self)
         model = self.model.to(self.device)
         if data_parallel: # use Data Parallelism with Multi-GPU
@@ -138,6 +160,20 @@ class Trainer(object):
             vali_acc, vali_f1 = self.run(func_forward, func_evaluate, data_loader_vali)
             print('Epoch %d/%d : Average Loss %5.4f, Accuracy: %0.3f/%0.3f/%0.3f, F1: %0.3f/%0.3f/%0.3f'
                   % (e+1, self.cfg.n_epochs, loss_sum / len(data_loader_train), train_acc, vali_acc, test_acc, train_f1, vali_f1, test_f1))
+            
+            metrics = {
+                "Average Loss": loss_sum / len(data_loader_train),
+                "Train Accuracy": train_acc,
+                "Validation Accuracy": vali_acc,
+                "Test Accuracy": test_acc,
+                "Train F1": train_f1,
+                "Validation F1": vali_f1,
+                "Test F1": test_f1
+            }
+
+            wandb.log(metrics)
+            
+            
             # print("Train execution time: %.5f seconds" % (time_sum / len(self.data_loader)))
             if vali_acc > vali_acc_best:
                 vali_acc_best = vali_acc
@@ -145,8 +181,15 @@ class Trainer(object):
                 model_best = copy.deepcopy(model.state_dict())
                 self.save(0)
         self.model.load_state_dict(model_best)
+        t_1 = timeit.default_timer()
+        time_cost = t_1 - t_0
+        wandb.log({"Time Cost": time_cost})
         print('The Total Epoch have been reached.')
         print('Best Accuracy: %0.3f/%0.3f/%0.3f, F1: %0.3f/%0.3f/%0.3f' % best_stat)
+        print('Time Cost in seconds: %0.3f' % time_cost)
+
+        wandb.finish()
+        
 
     def load(self, model_file, load_self=False):
         """ load saved model or pretrained transformer (a part of model) """
