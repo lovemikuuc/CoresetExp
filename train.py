@@ -106,8 +106,8 @@ class Trainer(object):
               , model_file=None, data_parallel=False, load_self=False):
         """ Train Loop """
         run = wandb.init(
-            project = 'Nov Coreset 5P retest',
-            name = 'hhar random 09 classifier v1',
+            project = 'Same Vali&Test 0.05 labeling rate',
+            name = '**********',
             config = {
                 "epochs": self.cfg.n_epochs,
                 "learning_rate": self.cfg.lr,
