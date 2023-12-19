@@ -106,7 +106,7 @@ class Trainer(object):
               , model_file=None, data_parallel=False, load_self=False):
         """ Train Loop """
         run = wandb.init(
-            project = 'Same Vali&Test 0.05 labeling rate',
+            project = 'Same-Vali-Test-GRU',
             name = '**********',
             config = {
                 "epochs": self.cfg.n_epochs,
