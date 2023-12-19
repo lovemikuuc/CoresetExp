@@ -4,7 +4,9 @@
 # @Author  : Huatao
 # @Email   : 735820057@qq.com
 # @File    : train.py
-# @Description :
+# @Description : Updated the Train.py
+#                Added Wandb Part that allows the program to upload results and generate visualization to Wandb
+# @ Edited by Dingzhi/George Zhou
 import copy
 import os
 import time
