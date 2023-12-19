@@ -3,8 +3,12 @@
 # @Time    : 2020/10/4 9:16
 # @Author  : Huatao
 # @Email   : 735820057@qq.com
-# @File    : benchmark.py
-# @Description :
+# @File    : benchmarkT.py
+# @Description : Using GRU to train models under different situations, and generate results in WandB for easier comparison. Includes a model trained by full dataset, one model trained by {}% of coreset, and 8 random selected data with {}% of data
+# @Edited by Dingzhi/George Zhou
+
+
+
 
 import numpy as np
 import torch
@@ -30,8 +34,7 @@ new_data = None
 new_label = None
 core_factor = 0.05
 
-# Q: are above  global variables??
-# 
+
 
 
 
@@ -141,13 +144,14 @@ def classify_benchmark2(args, label_index, training_rate, label_rate, balance=Tr
     
     if method != 'deepsense':
         data_set_train = IMUDataset(data_coreset, label_coreset, pipeline=pipeline)
-        test = IMUDataset(data_test, label_test, pipeline=pipeline)
-        validate = IMUDataset(data_vali, label_vali, pipeline=pipeline)
+        # Comment back based needs
+        #test = IMUDataset(data_test, label_test, pipeline=pipeline)
+        #validate = IMUDataset(data_vali, label_vali, pipeline=pipeline)
        
     else:
         data_set_train = FFTDataset(data_coreset, label_coreset, pipeline=pipeline)
-        test = FFTDataset(data_test, label_test, pipeline=pipeline)
-        validate = FFTDataset(data_vali, label_vali, pipeline=pipeline)
+        #test = FFTDataset(data_test, label_test, pipeline=pipeline)
+        #validate = FFTDataset(data_vali, label_vali, pipeline=pipeline)
      
 
 
@@ -272,13 +276,11 @@ if __name__ == "__main__":
 
     args = handle_argv('bench_' + method, 'train.json', method)
 
-    # is the following args user input?
-    # yes, it is user input
-    #print("Running classify_benchmark1")
-    #label_test, label_estimate_test = classify_benchmark(args, args.label_index, train_rate, label_rate, balance=balance, method=method)
+    print("Running classify_benchmark1")
+    label_test, label_estimate_test = classify_benchmark(args, args.label_index, train_rate, label_rate, balance=balance, method=method)
 
-    #label_names, label_num = load_dataset_label_names(args.dataset_cfg, args.label_index)
-    #cc, matrix, f1 = stat_results(label_test, label_estimate_test)
+    label_names, label_num = load_dataset_label_names(args.dataset_cfg, args.label_index)
+    cc, matrix, f1 = stat_results(label_test, label_estimate_test)
     # matrix_norm = plot_matrix(matrix, label_names)
 
 
