@@ -1,4 +1,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+# Coreset Experiment
+Coreset refers to a conceptual data extraction methodology designed to achieve optimal model performance with minimal data usage during AI model training. It is important to note that the accuracy of models trained using this method cannot surpass that of models trained with complete datasets. The objective is to apply this data extraction approach to mobile devices, enabling local model training on the device itself. The current approach is to use [Facilitate Location Selection](https://apricot-select.readthedocs.io/en/latest/functions/facilityLocation.html) to complete coreset dataset selection
+
+## Updated Files from [LIMU-BURT](https://github.com/dapowan/LIMU-BERT-Public)
+- [`benchmarkT.py`](./benchmarkT.py): Running this file enables a complete experiment with Coreset, where results are assessed or compared based on Accuracy. A single execution of this program facilitates three distinct training scenarios: one using a complete dataset, one using a fixed percentage of the Coreset dataset, and eight using a fixed percentage of randomly selected datasets. Throughout this process, the Validation and Test Sets initially used for the original model training are retained, allowing the subsequent nine experimental groups to validate the effectiveness of the Coreset method. It is noteworthy that the quantitative percentage (line 35) and the labeling rate (line 274) in the file require manual modification. The next step planned is to automate these two key elements. For example, in a single run, complete training models with a fixed labeling rate and Coresets of 5%, 10%, and 25% will be executed, followed by extracting the optimal accuracy.
+- [`train.py`](./train.py) : Added Wandb importing part for visualization
+
+
+
 # LIMU-BERT
 LIMU-BERT, a novel representation learning model that can make use of unlabeled IMU data and extract generalized rather than task-specific features. 
 LIMU-BERT adopts the principle of natural language model BERT to effectively capture temporal relations and feature distributions in IMU sensor data. With the representations learned via LIMU-BERT, task-specific models trained with limited labeled samples can achieve superior performances. 
